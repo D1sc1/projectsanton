@@ -1,0 +1,84 @@
+﻿<Window x:Class="CardFile.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CardFile.Wpf" xmlns:viewmodels="clr-namespace:CardFile.Wpf.ViewModels"
+        mc:Ignorable="d"
+        Title="{Binding WindowTitle}" Height="500" Width="1000"
+        Loaded="Window_Loaded">
+    <Window.DataContext>
+        <viewmodels:MainWindowViewModel />
+    </Window.DataContext>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Файл">
+                <MenuItem Header="_Открыть..." Click="FileOpenMenuItem_Click" />
+                <MenuItem Header="_Сохранить" Click="FileSaveMenuItem_Click" />
+                <MenuItem Header="Со_хранить как..." Click="FileSaveAsMenuItem_Click" />
+                <Separator />
+                <MenuItem Header="В_ыход" Click="FileExitMenuItem_Click" />
+            </MenuItem>
+        </Menu>
+
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding SummaryText}" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
+                <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0" />
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="250" VerticalAlignment="Center"
+                         ToolTip="Название, автор, жанр или читатель" />
+                <CheckBox IsChecked="{Binding IsOnlyIssuedShown}" Content="Только выданные" VerticalAlignment="Center" Margin="15,0,0,0" />
+            </StackPanel>
+
+            <DataGrid ItemsSource="{Binding Cards}" SelectedItem="{Binding SelectedCard}" AutoGenerateColumns="False" IsReadOnly="True"
+                      CanUserAddRows="False" Grid.Row="1" Margin="5" SelectionChanged="DataGrid_SelectionChanged"
+                      MouseDoubleClick="DataGrid_MouseDoubleClick">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsOverdue}" Value="True">
+                                <Setter Property="Background" Value="MistyRose" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="2*" />
+                    <DataGridTextColumn Header="Автор" Binding="{Binding Author}" Width="1.5*" />
+                    <DataGridTextColumn Header="Жанр" Binding="{Binding Genre}" />
+                    <DataGridTextColumn Header="Год" Binding="{Binding PublishYear}" />
+                    <DataGridTextColumn Header="Издательство" Binding="{Binding Publisher}" />
+                    <DataGridTextColumn Header="Стр." Binding="{Binding PageCount}" />
+                    <DataGridTextColumn Header="Поступила" Binding="{Binding ReceiptDateText}" />
+                    <DataGridTextColumn Header="Статус" Binding="{Binding StatusText}" />
+                    <DataGridTextColumn Header="Выдана" Binding="{Binding IssueDateText}" />
+                    <DataGridTextColumn Header="Читатель" Binding="{Binding ReaderName}" />
+                    <DataGridTextColumn Header="Стоимость" Binding="{Binding PriceText}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Вернуть в библиотеку" IsEnabled="{Binding IsReturnButtonEnabled}" Padding="5" Margin="5" VerticalAlignment="Center"
+                        Click="ReturnCardButton_Click" />
+                <Button Content="Создать" Padding="5" Margin="5" VerticalAlignment="Center" Click="CreateCardButton_Click" />
+                <Button Content="Правка" IsEnabled="{Binding IsEditButtonEnabled}" Padding="5" Margin="5" VerticalAlignment="Center"
+                        Click="EditCardButton_Click" />
+                <Button Content="Удалить" IsEnabled="{Binding IsDeleteButtonEnabled}" Padding="5" Margin="5" VerticalAlignment="Center"
+                        Click="DeleteCardButton_Click" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

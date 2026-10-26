@@ -1,0 +1,93 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* Доска Реверси */
+.reversi-board {
+    border-collapse: collapse;
+    border: 10px solid saddlebrown;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+    .reversi-board td {
+        width: 60px;
+        height: 60px;
+        padding: 0;
+        background-color: forestgreen;
+        border: 1px solid darkgreen;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+        .reversi-board td.last-move {
+            box-shadow: inset 0 0 0 3px red;
+        }
+
+.move-link {
+    display: block;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+}
+
+    .move-link:hover {
+        background-color: #2fa52f;
+    }
+
+.hint {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    vertical-align: middle;
+}
+
+.piece {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid gray;
+    vertical-align: middle;
+}
+
+.piece-black {
+    background: radial-gradient(circle at 35% 35%, #555, #000);
+}
+
+.piece-white {
+    background: radial-gradient(circle at 35% 35%, #fff, #ccc);
+}
+
+.piece-small {
+    width: 20px;
+    height: 20px;
+}
+
+.score {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.game-message {
+    color: darkred;
+}

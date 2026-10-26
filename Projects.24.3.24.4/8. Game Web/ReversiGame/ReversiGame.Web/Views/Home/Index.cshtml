@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Главная";
+}
+
+<main>
+    <section class="row" aria-labelledby="title">
+        <h1 id="title">Реверси</h1>
+        <p class="lead">
+            Классическая настольная игра на доске 8&times;8. Захватывайте фишки соперника,
+            зажимая их между своими, и к концу партии займите больше клеток, чем противник.
+        </p>
+        <p>
+            @Html.ActionLink("Играть с компьютером", "NewGame", "Game", new { vsComputer = true }, new { @class = "btn btn-success btn-md" })
+            @Html.ActionLink("Играть вдвоем", "NewGame", "Game", new { vsComputer = false }, new { @class = "btn btn-outline-success btn-md" })
+        </p>
+    </section>
+
+    <div class="row">
+        <section class="col-md-4">
+            <h2>Как ходить</h2>
+            <p>Щелкните по клетке с подсказкой - светлой точкой. Подсказки показывают все клетки, куда можно поставить фишку.</p>
+        </section>
+        <section class="col-md-4">
+            <h2>Компьютер</h2>
+            <p>Компьютер играет белыми и отвечает сразу после вашего хода. Он стремится занять углы и избегает клеток рядом с ними.</p>
+        </section>
+        <section class="col-md-4">
+            <h2>Правила</h2>
+            <p>Подробные правила игры - на странице @Html.ActionLink("Правила", "About", "Home").</p>
+        </section>
+    </div>
+</main>

@@ -1,0 +1,17 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ReversiGame.Common.Contracts.Repositories;
+using ReversiGame.DataAccess.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ReversiGame.UnitTests.RepositoryTests
+{
+    [TestClass]
+    public class UserRepositoryTests : UserRepositoryTestsBase
+    {
+        protected override IUserRepository CreateRepository() => new UserRepository();
+    }
+}

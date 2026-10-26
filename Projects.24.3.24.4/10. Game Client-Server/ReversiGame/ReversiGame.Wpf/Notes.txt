@@ -1,0 +1,11 @@
+Клиент игры "Реверси" для сервера ReversiGame.WebApi
+
+1. Подготовить БД PostgreSQL для сервера (см. 9. Game DB\ReversiGame\ReversiGame.Wpf\Notes.txt,
+   используется вариант Entity Framework и строка подключения EFMain в Web.config сервера).
+2. Открыть ReversiGame.Server.sln и запустить ReversiGame.WebApi (IIS Express).
+3. Адрес сервера указать в App.config клиента: appSettings / ServerConnection
+   (по умолчанию https://localhost:44387/ - так настроен проект WebApi).
+4. Открыть ReversiGame.Client.sln и запустить ReversiGame.Wpf.
+
+Правила проверяются и ход компьютера вычисляется на сервере. Клиент использует ReversiRules из ReversiGame.Common
+только для подсказок (какие клетки доступны) и подсчета фишек.

@@ -1,0 +1,21 @@
+Игра "Реверси" с хранением партий в БД PostgreSQL (.NET Framework 4.7.2)
+
+Строки подключения находятся в App.config проектов ReversiGame.Wpf и ReversiGame.UnitTests:
+  Main   - база для варианта ADO.NET (проект ReversiGame.DataAccess);
+  EFMain - база для варианта Entity Framework (проект ReversiGame.DataAccess.EF).
+
+Вариант ADO.NET
+1. Создать в pgAdmin пустую БД с именем из строки подключения Main.
+2. Выполнить в ней скрипт ReversiGame.DataAccess\Database\CreateTables.sql.
+3. В ReversiGameModule привязать UserRepository и GameRepository (и добавить ссылку на проект ReversiGame.DataAccess).
+
+Вариант Entity Framework (используется по умолчанию)
+1. Версия Npgsql не выше 6.0.13, пакет EntityFramework6.Npgsql.
+2. БД с таблицами Users, Games, Cells создается автоматически при первом запуске (CreateDatabaseIfNotExists).
+3. Если модель изменится, удобнее перейти на миграции: в Package Manager Console выбрать проект
+   ReversiGame.DataAccess.EF и выполнить Enable-Migrations, Add-Migration <имя>, Update-Database.
+
+Что хранится в БД
+  Users - игроки и их статистика (Wins, Losses, Draws);
+  Games - партии: чей ход, количество ходов, клетка последнего хода;
+  Cells - занятые клетки доски (Value: 1 - черная фишка, 2 - белая).

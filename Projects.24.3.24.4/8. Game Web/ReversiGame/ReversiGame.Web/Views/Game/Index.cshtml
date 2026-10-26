@@ -1,0 +1,65 @@
+﻿@model ReversiGame.Web.Models.GameViewModel
+
+@{
+    ViewBag.Title = "Реверси";
+}
+
+<main>
+    <h2>Реверси</h2>
+    <p class="text-muted">
+        @(Model.IsVsComputer ? "Вы играете черными против компьютера" : "Игра вдвоем: черные и белые ходят по очереди")
+    </p>
+
+    <div class="row">
+        <div class="col-lg-7">
+            <table class="reversi-board">
+                @for (int row = 0; row < Model.RowCount; row++)
+                {
+                    <tr>
+                        @for (int column = 0; column < Model.ColumnCount; column++)
+                        {
+                            var cell = Model.Cells[row, column];
+                            <td class="@(cell.IsLastMove ? "last-move" : "")">
+                                @if (cell.IsValidMove)
+                                {
+                                    <a class="move-link" href="@Url.Action("MakeMove", "Game", new { row = cell.Row, column = cell.Column })"
+                                       title="Сходить сюда"><span class="hint"></span></a>
+                                }
+                                else if (!string.IsNullOrEmpty(cell.PieceCssClass))
+                                {
+                                    <span class="@cell.PieceCssClass"></span>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="score">
+                <div><span class="piece piece-black piece-small"></span> Черные: <b>@Model.BlackCount</b></div>
+                <div><span class="piece piece-white piece-small"></span> Белые: <b>@Model.WhiteCount</b></div>
+                <div class="text-muted">Ходов сделано: @Model.MoveCount</div>
+            </div>
+
+            @if (Model.IsGameOver)
+            {
+                <h3 class="text-danger">Партия окончена</h3>
+            }
+
+            <h4 class="text-success">@Model.StatusText</h4>
+
+            @if (!string.IsNullOrEmpty(Model.MessageText))
+            {
+                <p class="game-message">@Model.MessageText</p>
+            }
+
+            <div class="mt-4">
+                @Html.ActionLink("Новая игра с компьютером", "NewGame", new { vsComputer = true }, new { @class = "btn btn-success mb-2" })
+                <br />
+                @Html.ActionLink("Новая игра вдвоем", "NewGame", new { vsComputer = false }, new { @class = "btn btn-outline-success" })
+            </div>
+        </div>
+    </div>
+</main>
