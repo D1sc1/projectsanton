@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Готовые программы, которые собирает build.ps1, и скачанный nuget.exe
+dist/
+build/.tools/

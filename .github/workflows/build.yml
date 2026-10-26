@@ -1,0 +1,53 @@
+# Автоматическая сборка exe для всех 10 проектов.
+# Готовые программы публикуются как артефакт "ReversiProjects" на странице запуска (вкладка Actions),
+# а при отправке тега вида v1.0 - еще и как релиз (вкладка Releases).
+name: Сборка программ
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Получение исходного кода
+        uses: actions/checkout@v4
+
+      - name: Подключение MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Подключение NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Сборка всех проектов и тесты
+        shell: pwsh
+        run: ./build.ps1 -Test
+
+      - name: Публикация готовых программ
+        uses: actions/upload-artifact@v4
+        with:
+          name: ReversiProjects
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Архив для релиза
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: Compress-Archive -Path dist/* -DestinationPath ReversiProjects.zip
+
+      - name: Релиз
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ReversiProjects.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  contents: write

@@ -34,10 +34,49 @@
 | `9. Game DB` | WPF + PostgreSQL | вход игрока, партии хранятся в БД; два варианта доступа к данным — ADO.NET (`Npgsql`, скрипт `Database/CreateTables.sql`) и Entity Framework 6; статистика игрока (победы/поражения/ничьи); правила вынесены в `ReversiGame.Common/Rules`; тесты |
 | `10. Game Client-Server` | ASP.NET Web API + WPF | сервер `ReversiGame.WebApi` (слои из проекта 9) и клиент `ReversiGame.Wpf`, который работает с сервером через `ReversiGame.BusinessProxy`; ход компьютера считается на сервере |
 
-## Как запустить
+## Готовые программы (exe)
+
+Exe-файлы собираются автоматически, хранить их в репозитории не нужно.
+
+### Вариант 1. Скачать готовую сборку с GitHub
+
+При каждом push в репозиторий GitHub Actions (`.github/workflows/build.yml`) собирает все проекты на Windows.
+
+1. Откройте вкладку **Actions** репозитория и выберите последний успешный запуск «Сборка программ».
+2. Внизу страницы, в разделе **Artifacts**, скачайте архив **ReversiProjects** и распакуйте его.
+3. Откройте файл `КАК ЗАПУСТИТЬ.txt` в распакованной папке.
+
+Если отправить тег вида `v1.0` (`git tag v1.0 && git push origin v1.0`), тот же архив появится во вкладке **Releases**.
+Релиз не удаляется через 30 дней, как артефакты, а у публичного репозитория его можно скачать даже без входа в GitHub.
+
+### Вариант 2. Собрать на своем компьютере
+
+Нужна Visual Studio 2022 с рабочими нагрузками «Разработка классических приложений .NET»
+и «ASP.NET и разработка веб-приложений» (или Build Tools for Visual Studio 2022 с теми же компонентами).
+
+1. Дважды щелкните `build.cmd` в корне репозитория (или выполните `.\build.ps1` в PowerShell;
+   `.\build.ps1 -Test` дополнительно запускает тесты, которым не нужна база данных).
+2. Скрипт сам скачает NuGet-пакеты, соберет все 10 проектов в конфигурации Release
+   и сложит результат в папку `dist`, после чего откроет ее.
+
+### Что лежит в `dist` и как запускать
+
+| Папка | Запуск |
+|---|---|
+| `1. AlarmClock` … `7. Game WPF` | двойной щелчок по exe: `AlarmClock.exe`, `Drawing.exe`, `Calculator.exe`, `Calculator.Wpf.exe`, `CardFile.Wpf.exe`, `GraphEditor.exe`, `ReversiGame.Wpf.exe` |
+| `8. Game Web` | `Запустить игру.cmd` — сайт стартует в IIS Express, браузер откроется на http://localhost:8380/Game |
+| `9. Game DB` | `ReversiGame.Wpf.exe`; нужна PostgreSQL (пользователь `postgres`, пароль `Qwerty123`), база для EF создается сама |
+| `10. Game Client-Server` | сначала `1. Запустить сервер.cmd` (сервер на http://localhost:8387/), затем `2. Запустить клиент.cmd`; нужны PostgreSQL и IIS Express |
+
+У веб-проектов (8 и сервер в 10) не бывает exe: это сайты ASP.NET на .NET Framework, их запускает IIS Express.
+Он ставится вместе с Visual Studio или отдельно: https://www.microsoft.com/download/details.aspx?id=48264.
+Программы рассчитаны на .NET Framework 4.7.2 и новее — в Windows 10/11 он уже есть.
+
+## Запуск из Visual Studio
 
 Нужны Visual Studio 2022 и .NET Framework 4.7.2. При первой сборке восстановите NuGet-пакеты
-(они, как и в `master`, не хранятся в репозитории).
+(они, как и в `master`, не хранятся в репозитории). Решение проекта 9 собирайте раньше проекта 10:
+проект 10 использует библиотеки и пакеты из проекта 9.
 
 Проекты 9 и 10 работают с PostgreSQL. Строки подключения — в `App.config`/`Web.config`
 (`Main` — ADO.NET, `EFMain` — Entity Framework, пользователь `postgres`, пароль `Qwerty123`, как у преподавателя).

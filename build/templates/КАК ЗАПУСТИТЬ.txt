@@ -1,0 +1,46 @@
+﻿КАК ЗАПУСТИТЬ ПРОГРАММЫ
+
+Нужна Windows 10/11 (в ней уже есть .NET Framework 4.8, программы рассчитаны на 4.7.2 и новее).
+Устанавливать ничего не нужно, кроме случаев, отмеченных ниже (IIS Express и PostgreSQL).
+
+1. AlarmClock           - 1. AlarmClock\AlarmClock.exe
+2. Drawing              - 2. Drawing\Drawing.exe
+3. Calculator           - 3. Calculator\Calculator.exe
+4. Calculator WPF       - 4. Calculator WPF\Calculator.Wpf.exe
+5. CardFile             - 5. CardFile\CardFile.Wpf.exe
+6. GraphEditor          - 6. GraphEditor\GraphEditor.exe
+7. Game WPF             - 7. Game WPF\ReversiGame.Wpf.exe
+
+Достаточно дважды щелкнуть по exe. Файлы dll и config рядом с exe не удаляйте и не разносите по разным папкам.
+
+
+8. Game Web (сайт игры)
+   У веб-проекта нет exe: это сайт, который запускается в IIS Express.
+   - Запустите "8. Game Web\Запустить игру.cmd".
+   - Откроется браузер с адресом http://localhost:8380/Game
+   - Чтобы остановить сайт, закройте окно IIS Express.
+   IIS Express устанавливается вместе с Visual Studio. Если его нет:
+   https://www.microsoft.com/download/details.aspx?id=48264
+
+
+9. Game DB (игра с базой данных PostgreSQL)
+   - Установите PostgreSQL (https://www.postgresql.org/download/windows/).
+     Пароль пользователя postgres - Qwerty123 (или исправьте пароль в строках подключения).
+   - Запустите 9. Game DB\ReversiGame.Wpf.exe и введите имя игрока.
+     По умолчанию используется Entity Framework: база ReversiGame.2.Dev.24.3.24.4 создается сама при первом запуске.
+   - Строки подключения - в файле 9. Game DB\ReversiGame.Wpf.exe.config (раздел connectionStrings).
+   - Для варианта ADO.NET (строка Main) создайте пустую базу ReversiGame.1.Dev.24.3.24.4
+     и выполните в ней скрипт 9. Game DB\CreateTables.sql.
+
+
+10. Game Client-Server (сервер + клиент)
+   - Нужны PostgreSQL (как в п. 9) и IIS Express (как в п. 8).
+   - Запустите "10. Game Client-Server\1. Запустить сервер.cmd" и не закрывайте окно IIS Express.
+     В браузере откроется страница сервера http://localhost:8387/
+   - Запустите "10. Game Client-Server\2. Запустить клиент.cmd" (или Client\ReversiGame.Wpf.exe).
+   - Адрес сервера для клиента - в Client\ReversiGame.Wpf.exe.config (ключ ServerConnection),
+     строка подключения сервера к базе - в Server\Web.config (EFMain).
+
+
+Если Windows показывает "Windows защитила ваш компьютер" (SmartScreen) - нажмите "Подробнее" -> "Выполнить в любом случае":
+программы собраны из исходного кода этого репозитория и не подписаны цифровой подписью.
