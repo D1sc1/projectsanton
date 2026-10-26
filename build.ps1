@@ -171,6 +171,34 @@ $configText = $configText.Replace('https://localhost:44387/', 'http://localhost:
 
 Copy-Template 'КАК ЗАПУСТИТЬ.txt'
 
+# Проверка, что в dist есть все нужное для запуска
+$expected = @(
+    '1. AlarmClock\AlarmClock.exe', '1. AlarmClock\AlarmClock.exe.config', '1. AlarmClock\Images',
+    '2. Drawing\Drawing.exe',
+    '3. Calculator\Calculator.exe', '3. Calculator\Calculator.Business.dll',
+    '4. Calculator WPF\Calculator.Wpf.exe', '4. Calculator WPF\Calculator.Business.dll',
+    '5. CardFile\CardFile.Wpf.exe', '5. CardFile\CardFile.DataStore.dll', '5. CardFile\AutoMapper.dll',
+    '6. GraphEditor\GraphEditor.exe', '6. GraphEditor\GraphEditor.Business.dll',
+    '7. Game WPF\ReversiGame.Wpf.exe', '7. Game WPF\ReversiGame.Business.dll',
+    '8. Game Web\site\Web.config', '8. Game Web\site\Global.asax', '8. Game Web\site\bin\ReversiGame.Web.dll',
+    '8. Game Web\site\Views\Game\Index.cshtml', '8. Game Web\site\Content\Site.css', '8. Game Web\Запустить игру.cmd',
+    '9. Game DB\ReversiGame.Wpf.exe', '9. Game DB\ReversiGame.Wpf.exe.config', '9. Game DB\ReversiGame.DataAccess.EF.dll',
+    '9. Game DB\EntityFramework6.Npgsql.dll', '9. Game DB\CreateTables.sql',
+    '10. Game Client-Server\Server\Web.config', '10. Game Client-Server\Server\bin\ReversiGame.WebApi.dll',
+    '10. Game Client-Server\Server\bin\ReversiGame.DataAccess.EF.dll',
+    '10. Game Client-Server\Client\ReversiGame.Wpf.exe', '10. Game Client-Server\Client\ReversiGame.BusinessProxy.dll',
+    '10. Game Client-Server\1. Запустить сервер.cmd', '10. Game Client-Server\2. Запустить клиент.cmd',
+    'КАК ЗАПУСТИТЬ.txt'
+)
+$missing = $expected | Where-Object { -not (Test-Path -LiteralPath (Join-Path $dist $_)) }
+if ($missing) {
+    throw "В папке dist не хватает файлов: $($missing -join ', ')"
+}
+
+if (-not ([IO.File]::ReadAllText($clientConfig)).Contains('http://localhost:8387/')) {
+    throw 'В конфигурации клиента не удалось заменить адрес сервера'
+}
+
 if ($Test) {
     Write-Step 'Модульные тесты (без базы данных)'
 
@@ -190,5 +218,5 @@ if ($Test) {
 }
 
 Write-Step "Готово. Программы лежат в папке $dist"
-Get-ChildItem $dist -Recurse -Filter *.exe | ForEach-Object { Write-Host ('  ' + $_.FullName.Substring($dist.Length + 1)) }
+Get-ChildItem $dist -Recurse -Filter *.exe | Where-Object { $_.FullName -notlike '*\roslyn\*' } | ForEach-Object { Write-Host ('  ' + $_.FullName.Substring($dist.Length + 1)) }
 Get-ChildItem $dist -Recurse -Filter *.cmd | ForEach-Object { Write-Host ('  ' + $_.FullName.Substring($dist.Length + 1)) }

@@ -36,6 +36,11 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      # Сайты из dist запускаются в IIS Express так же, как .cmd-файлы, плюс тесты с базой PostgreSQL
+      - name: Проверка запуска сайтов и тесты с базой данных
+        shell: pwsh
+        run: ./build/ci-smoke.ps1
+
       - name: Архив для релиза
         if: startsWith(github.ref, 'refs/tags/v')
         shell: pwsh
